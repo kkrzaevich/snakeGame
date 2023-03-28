@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,24 +8,45 @@
     <title>Snake game</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div class="game-field">
-        <div class="cell row0 col0 white"></div>
-        <div class="cell row0 col1 white"></div>
-        <div class="cell row0 col2 white"></div>
-        <div class="cell row0 col3 white"></div>
-        <div class="cell row1 col1 white"></div>
-        <div class="cell row1 col2 green"></div>
-        <div class="cell row1 col3 green"></div>
-        <div class="cell row1 col4 white"></div>
-        <div class="cell row2 col1 white"></div>
-        <div class="cell row2 col2 white"></div>
-        <div class="cell row2 col3 white"></div>
-        <div class="cell row2 col4 white"></div>
-        <div class="cell row3 col1 white"></div>
-        <div class="cell row3 col2 white"></div>
-        <div class="cell row3 col3 white"></div>
-        <div class="cell row3 col4 white"></div>
-    </div>
+    <main>
+        <section class="left-side">
+            <div class="game-field">
+                <div class="cell row0 col0 white"></div>
+                <div class="cell row0 col1 white"></div>
+                <div class="cell row0 col2 white"></div>
+                <div class="cell row0 col3 white"></div>
+                <div class="cell row1 col1 white"></div>
+                <div class="cell row1 col2 white"></div>
+                <div class="cell row1 col3 white"></div>
+                <div class="cell row1 col4 white"></div>
+                <div class="cell row2 col1 white"></div>
+                <div class="cell row2 col2 white"></div>
+                <div class="cell row2 col3 white"></div>
+                <div class="cell row2 col4 white"></div>
+                <div class="cell row3 col1 white"></div>
+                <div class="cell row3 col2 white"></div>
+                <div class="cell row3 col3 white"></div>
+                <div class="cell row3 col4 white"></div>
+            </div>
+        </section>
+        <section class="right-side">
+            <div class="settings-outer">
+                <p class="settings-inner">Number of rows:</p>
+                <button class="settings-inner small" id="rows-decrement">-</button>
+                <p class="settings-inner small" id="rows-show-num"></p>
+                <button class="settings-inner small" id="rows-increment">+</button>
+
+                <p class="settings-inner">Number of cols:</p>
+                <button class="settings-inner small" id="cols-decrement">-</button>
+                <p class="settings-inner small" id="cols-show-num"></p>
+                <button class="settings-inner small" id="cols-increment">+</button>
+            </div>
+        </section>
+
+    </main>
 </body>
+<script src="script/main.js"></script>
+
 </html>
