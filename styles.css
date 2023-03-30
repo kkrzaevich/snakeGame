@@ -18,6 +18,11 @@ section {
 .game-field {
     display: grid;
     grid-template-rows: repeat(var(--rows-num), var(--cell-size));
+    grid-template-columns: var(--cols-num)*var(--cell-size);
+}
+
+.game-field-row {
+    display: grid;
     grid-template-columns: repeat(var(--cols-num), var(--cell-size));
 }
 

@@ -25,22 +25,23 @@ class GameField {
         root.style.setProperty('--cols-num', this.cols);
     }
     buildInDOM(inputRows, inputCols) {
+        // getting array
         this.getRowsAndCols(inputRows, inputCols);
         console.log("Building dom, rows are", this.rows, ", cols are ", this.cols);
         document.querySelector("#game-field").innerHTML = '';
         const fieldArray = this.setupArray();
-        // Разделить на элементы. Должно быть так
-        // <div> - ряд
-        //     <div></div> - столбец
-        //     <div></div> - столбец
-        //     <div></div> - столбец
-        //     <div></div> - столбец
-        // </div>
-        fieldArray.forEach((row) => {
+        // building in DOM
+        fieldArray.forEach((row, index) => {
+            // building rows
+            const rowElement = document.createElement("div");
+            rowElement.classList = `game-field-row ${index}`;
+            this.targetDOMel.appendChild(rowElement);
             row.forEach((cell) => {
+                // building cols
                 const cellElement = document.createElement("div");
                 cellElement.classList = cell;
-                this.targetDOMel.appendChild(cellElement);
+                console.log(rowElement);
+                rowElement.appendChild(cellElement);
             })
         })
         this.updateStyles();
