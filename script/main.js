@@ -13,7 +13,7 @@ class GameField {
         for (let i=0; i<this.rows; i++) {
             const rowArray = [];
             for (let j=0; j<this.cols; j++) {
-                rowArray.push(`cell row${i} col${j} white`);
+                rowArray.push(`cell row${i}-col${j} white`);
             }
         fieldArray.push(rowArray);
         }
@@ -27,7 +27,6 @@ class GameField {
     buildInDOM(inputRows, inputCols) {
         // getting array
         this.getRowsAndCols(inputRows, inputCols);
-        console.log("Building dom, rows are", this.rows, ", cols are ", this.cols);
         document.querySelector("#game-field").innerHTML = '';
         const fieldArray = this.setupArray();
         // building in DOM
@@ -40,7 +39,6 @@ class GameField {
                 // building cols
                 const cellElement = document.createElement("div");
                 cellElement.classList = cell;
-                console.log(rowElement);
                 rowElement.appendChild(cellElement);
             })
         })
@@ -49,21 +47,24 @@ class GameField {
 }
 
 class Snake {
-    constructor(snakeArray, vector) {
+    constructor(snakeArray, direction) {
         this.snakeArray = this.snakeArray;
         this.vector = this.vector;
     }
     setBaseArray(inputArray) {
-        let newArray = inputArray.map((row) => {return row.map((col) => {return undefined})});
+        const newArray = inputArray.map((row) => {return row.map((col) => {return -1})});
         this.snakeArray = [...newArray];
     }
     setInitialSnakeNumbers() {
         const startingRow = Math.floor(this.snakeArray.length/2) -1;
         const startingColumn = Math.floor(this.snakeArray[0].length/2) - 1;
         this.snakeArray[startingRow][startingColumn] = 0;
+        console.log("snake array", this.snakeArray)
     }
-    drawSnake() {
-        
+    drawSnake(gameFieldDOM) {
+        this.snakeArray.forEach((row, index1) => row.forEach((item, index2) => {
+            if (item>=0) {document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} red`}
+        }))
     }
     changeVector() {
 
@@ -71,8 +72,34 @@ class Snake {
     eatFood() {
 
     }
+    getMaxElement() {
+        let maxEl = {value: -1, indexRows: undefined, indexCols: undefined}
+        this.snakeArray.forEach(
+            (row, index) => {
+                console.log(row);
+                let localMax = Math.max(...row);
+                console.log(localMax);
+                if (localMax > maxEl.value) {
+                    maxEl.value = localMax;
+                    maxEl.indexRows = index;
+                    maxEl.indexCols = row.indexOf(localMax);
+                }
+            }
+        )
+        return maxEl;
+    }
     move() {
+        let maxEl = this.getMaxElement();
+        console.log(maxEl);
+        // нужно добавить справа один элемент с номером Max + 1
+        // затем уменьшить все элементы массива
+        // затем присвоить 
+        // затем перерендерить змею
 
+        // let maxIndex = 
+        // if (this.direction === "right") {
+
+        // }
     }
     hitBoundary() {
 
@@ -141,4 +168,6 @@ rowsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting
 colsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
 snake.setBaseArray(gameField.setupArray());
 snake.setInitialSnakeNumbers();
+snake.drawSnake(gameField.targetDOMel);
+snake.move();
 
