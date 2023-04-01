@@ -94,25 +94,25 @@ class Snake {
         let maxEl = this.getMaxElement();
         let nextCell = {};
         if (this.direction === "right") {
-            if (typeof this.snakeArray[maxEl.indexRows][maxEl.indexCols+1] !== "number") {
+            if (maxEl.indexCols >= this.snakeArray[0].length - 1) {
                 nextCell = {rows: maxEl.indexRows, cols: 0}
             } else {
                 nextCell = {rows: maxEl.indexRows, cols: maxEl.indexCols + 1}
             }
         } else if (this.direction === "left") {
-            if (typeof this.snakeArray[maxEl.indexRows][maxEl.indexCols-1] !== "number") {
+            if (maxEl.indexCols <= 0) {
                 nextCell = {rows: maxEl.indexRows, cols: this.snakeArray[0].length - 1}
             } else {
                 nextCell = {rows: maxEl.indexRows, cols: maxEl.indexCols - 1}
             }            
         } else if (this.direction === "top") {
-            if (typeof this.snakeArray[maxEl.indexRows-1][maxEl.indexCols] !== "number") {
+            if (maxEl.indexRows <= 0) {
                 nextCell = {rows: this.snakeArray.length - 1, cols: maxEl.indexCols}
             } else {
                 nextCell = {rows: maxEl.indexRows-1, cols: maxEl.indexCols}
             }              
         } else if (this.direction === "bottom") {
-            if (typeof this.snakeArray[maxEl.indexRows+1][maxEl.indexCols] !== "number") {
+            if (maxEl.indexRows >= this.snakeArray.length - 1) {
                 nextCell = {rows: 0, cols: maxEl.indexCols}
             } else {
                 nextCell = {rows: maxEl.indexRows+1, cols: maxEl.indexCols}
@@ -128,13 +128,7 @@ class Snake {
 
     }
     move(maxEl, nextCell, gameFieldDOM) {
-        // получаем направление
-        // console.log("Debugger: snake array",this.snakeArray)
-        // console.log("Debugger: row", nextCell.rows)
-        // console.log("Debugger: col", nextCell.cols)
-        // console.log("Debugger: nextcellcontent",this.snakeArray[nextCell.rows][nextCell.cols])
         let nextCellContent = this.snakeArray[nextCell.rows][nextCell.cols]
-        // debugger;
         if (nextCellContent === -1) { // если ничего нет по ходу движения
             this.snakeArray[nextCell.rows][nextCell.cols] = maxEl.value + 1;
             this.deleteCells(); 
