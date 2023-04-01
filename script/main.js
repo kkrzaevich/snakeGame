@@ -71,7 +71,7 @@ class Snake {
     changeVector() {
 
     }
-    eatFood() {
+    generateFood() {
 
     }
     getMaxElement() {
@@ -90,7 +90,8 @@ class Snake {
         )
         return maxEl;
     }
-    getNextCell(maxEl) {
+    getNextCell() {
+        let maxEl = this.getMaxElement();
         let nextCell = {};
         if (this.direction === "right") {
             if (typeof this.snakeArray[maxEl.indexRows][maxEl.indexCols+1] !== "number") {
@@ -112,16 +113,28 @@ class Snake {
             }              
         } else if (this.direction === "bottom") {
             if (typeof this.snakeArray[maxEl.indexRows+1][maxEl.indexCols] !== "number") {
-                nextCell = {rows: maxEl.indexRows, cols: maxEl.indexCols}
-            } else {
                 nextCell = {rows: 0, cols: maxEl.indexCols}
+            } else {
+                nextCell = {rows: maxEl.indexRows+1, cols: maxEl.indexCols}
             }                          
         }
         return nextCell;
     }
+    deleteCells() {
+        // снижаем номера в ячейках на 1
+        this.snakeArray = [...this.snakeArray.map((row) => (row.map((col) => {return (col>-1) ? col - 1 : col})))];
+    }
+    gameOver() {
+
+    }
     move(maxEl, nextCell, gameFieldDOM) {
         // получаем направление
-        let nextCellContent = this.snakeArray[nextCell.rows][nextCell.rows]
+        // console.log("Debugger: snake array",this.snakeArray)
+        // console.log("Debugger: row", nextCell.rows)
+        // console.log("Debugger: col", nextCell.cols)
+        // console.log("Debugger: nextcellcontent",this.snakeArray[nextCell.rows][nextCell.cols])
+        let nextCellContent = this.snakeArray[nextCell.rows][nextCell.cols]
+        // debugger;
         if (nextCellContent === -1) { // если ничего нет по ходу движения
             this.snakeArray[nextCell.rows][nextCell.cols] = maxEl.value + 1;
             this.deleteCells(); 
@@ -133,13 +146,6 @@ class Snake {
         console.log("snake array: ", this.snakeArray);
         this.drawSnake(gameFieldDOM);
     }
-    deleteCells() {
-        // снижаем номера в ячейках на 1
-        this.snakeArray = [...this.snakeArray.map((row) => (row.map((col) => {return (col>-1) ? col - 1 : col})))];
-    }
-    hitItself() {
-
-    }
     
     // ! Нет, вектор для всех ячеек не нужен, он нужен только для передней ячейки, остальные просто удаляются по номеру. Вектор - свойство всей змеи.
 
@@ -147,7 +153,7 @@ class Snake {
     // Вектор движения можно менять клавиатурой
     // После кажого такта движения: создаем новую точку в направлении вектора головного элемента, номер этого элемента на один больше.
     // Потом сразу же уменьшаем все номера на 1. Удаляем максимальный или минимальный (тот, который будет отвечать за хвост).
-    // Если по ходу действия встретили еду, удаляем ее (делаем паузу). При этом в следующем такте движения элемент хвоста мы удалять не будем.
+    // Если по ходу действия встретили еду, удаляем ее (делаем паузу). При этом в следующем такте движения элемент хвоста мы удалять не будем. 
 }
 
 class Setting {
@@ -202,5 +208,5 @@ colsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting
 snake.setBaseArray(gameField.setupArray());
 snake.setInitialSnakeNumbers();
 snake.drawSnake(gameField.targetDOMel);
-snake.move(gameField.targetDOMel);
+snake.move(snake.getMaxElement(), snake.getNextCell(), gameField.targetDOMel);
 
