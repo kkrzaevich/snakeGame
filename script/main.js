@@ -45,7 +45,6 @@ class GameField {
         this.updateStyles();
     }
 }
-
 class Snake {
     constructor(snakeArray, direction) {
         this.snakeArray = snakeArray;
@@ -67,9 +66,6 @@ class Snake {
         } else {document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} white`}
         }
         ))
-    }
-    changeVector() {
-
     }
     generateFood() {
 
@@ -140,14 +136,33 @@ class Snake {
         console.log("snake array: ", this.snakeArray);
         this.drawSnake(gameFieldDOM);
     }
-    
-    // ! Нет, вектор для всех ячеек не нужен, он нужен только для передней ячейки, остальные просто удаляются по номеру. Вектор - свойство всей змеи.
+}
 
-    // Хочу сделать, чтобы класс Змея использовал внутри точки, которые хранили номер, а также вектор движения. А они тоже отдельный класс.
-    // Вектор движения можно менять клавиатурой
-    // После кажого такта движения: создаем новую точку в направлении вектора головного элемента, номер этого элемента на один больше.
-    // Потом сразу же уменьшаем все номера на 1. Удаляем максимальный или минимальный (тот, который будет отвечать за хвост).
-    // Если по ходу действия встретили еду, удаляем ее (делаем паузу). При этом в следующем такте движения элемент хвоста мы удалять не будем. 
+class Controls {
+    constructor(key) {
+        this.key = key;
+    }
+    getKey(snake) {
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowRight") {
+                this.key = "right";
+                snake.direction = this.key;
+                console.log(snake.direction);
+            } else if (event.key === "ArrowLeft") {
+                this.key = "left";
+                snake.direction = this.key;
+                console.log(snake.direction);
+            } else if (event.key === "ArrowUp") {
+                this.key = "top";
+                snake.direction = this.key;
+                console.log(snake.direction);
+            } else if (event.key === "ArrowDown") {
+                this.key = "bottom";
+                snake.direction = this.key;
+                console.log(snake.direction);
+            }
+        });
+    }
 }
 
 class Setting {
@@ -192,15 +207,24 @@ function initializeEverything(gameField, snake, rows, cols) {
   // Функция, которая объединяет всё и вставляется в makeWork вместо build in DOM
 }
 
+function pulse(gameField, snake) {
+    snake.move(snake.getMaxElement(), snake.getNextCell(), gameField.targetDOMel);
+}
+
 const rowsSetting = new Setting(4, document.querySelector("#rows-decrement"), document.querySelector("#rows-increment"), document.querySelector("#rows-show-num"));
 const colsSetting = new Setting(4, document.querySelector("#cols-decrement"), document.querySelector("#cols-increment"), document.querySelector("#cols-show-num"));
 const gameField = new GameField(rowsSetting.number, colsSetting.number, document.querySelector("#game-field"));
-const snake = new Snake([], 'right');
+const controls = new Controls("right");
+const snake = new Snake([], controls.key);
 
 rowsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
 colsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
 snake.setBaseArray(gameField.setupArray());
 snake.setInitialSnakeNumbers();
 snake.drawSnake(gameField.targetDOMel);
-snake.move(snake.getMaxElement(), snake.getNextCell(), gameField.targetDOMel);
+controls.getKey(snake);
+pulse(gameField, snake);
+setInterval(() => {pulse(gameField, snake)}, 500);
 
+// добавить еду
+// отмасштабировать для разного количества ячеек
