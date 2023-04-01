@@ -48,8 +48,8 @@ class GameField {
 
 class Snake {
     constructor(snakeArray, direction) {
-        this.snakeArray = this.snakeArray;
-        this.vector = this.vector;
+        this.snakeArray = snakeArray;
+        this.direction = direction;
     }
     setBaseArray(inputArray) {
         const newArray = inputArray.map((row) => {return row.map((col) => {return -1})});
@@ -63,8 +63,10 @@ class Snake {
     }
     drawSnake(gameFieldDOM) {
         this.snakeArray.forEach((row, index1) => row.forEach((item, index2) => {
-            if (item>=0) {document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} red`}
-        }))
+            if (item>=0) {document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} red`
+        } else {document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} white`}
+        }
+        ))
     }
     changeVector() {
 
@@ -88,21 +90,52 @@ class Snake {
         )
         return maxEl;
     }
-    move() {
-        let maxEl = this.getMaxElement();
-        console.log(maxEl);
-        // нужно добавить справа один элемент с номером Max + 1
-        // затем уменьшить все элементы массива
-        // затем присвоить 
-        // затем перерендерить змею
-
-        // let maxIndex = 
-        // if (this.direction === "right") {
-
-        // }
+    getNextCell(maxEl) {
+        let nextCell = {};
+        if (this.direction === "right") {
+            if (typeof this.snakeArray[maxEl.indexRows][maxEl.indexCols+1] !== "number") {
+                nextCell = {rows: maxEl.indexRows, cols: 0}
+            } else {
+                nextCell = {rows: maxEl.indexRows, cols: maxEl.indexCols + 1}
+            }
+        } else if (this.direction === "left") {
+            if (typeof this.snakeArray[maxEl.indexRows][maxEl.indexCols-1] !== "number") {
+                nextCell = {rows: maxEl.indexRows, cols: this.snakeArray[0].length - 1}
+            } else {
+                nextCell = {rows: maxEl.indexRows, cols: maxEl.indexCols - 1}
+            }            
+        } else if (this.direction === "top") {
+            if (typeof this.snakeArray[maxEl.indexRows-1][maxEl.indexCols] !== "number") {
+                nextCell = {rows: this.snakeArray.length - 1, cols: maxEl.indexCols}
+            } else {
+                nextCell = {rows: maxEl.indexRows-1, cols: maxEl.indexCols}
+            }              
+        } else if (this.direction === "bottom") {
+            if (typeof this.snakeArray[maxEl.indexRows+1][maxEl.indexCols] !== "number") {
+                nextCell = {rows: maxEl.indexRows, cols: maxEl.indexCols}
+            } else {
+                nextCell = {rows: 0, cols: maxEl.indexCols}
+            }                          
+        }
+        return nextCell;
     }
-    hitBoundary() {
-
+    move(maxEl, nextCell, gameFieldDOM) {
+        // получаем направление
+        let nextCellContent = this.snakeArray[nextCell.rows][nextCell.rows]
+        if (nextCellContent === -1) { // если ничего нет по ходу движения
+            this.snakeArray[nextCell.rows][nextCell.cols] = maxEl.value + 1;
+            this.deleteCells(); 
+        } else if (nextCellContent === -1000) { // если по ходу движения еда
+            this.snakeArray[nextCell.rows][nextCell.cols] = maxEl.value + 1;
+        } else if (nextCellContent >= 0) { // если по ходу движения змея
+            this.gameOver();
+        } 
+        console.log("snake array: ", this.snakeArray);
+        this.drawSnake(gameFieldDOM);
+    }
+    deleteCells() {
+        // снижаем номера в ячейках на 1
+        this.snakeArray = [...this.snakeArray.map((row) => (row.map((col) => {return (col>-1) ? col - 1 : col})))];
     }
     hitItself() {
 
@@ -169,5 +202,5 @@ colsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting
 snake.setBaseArray(gameField.setupArray());
 snake.setInitialSnakeNumbers();
 snake.drawSnake(gameField.targetDOMel);
-snake.move();
+snake.move(gameField.targetDOMel);
 
