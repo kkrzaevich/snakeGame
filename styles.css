@@ -1,10 +1,11 @@
 :root {
-    --white: white;
-    --green: green;
-    --red: red;
+    --white: #F9FCFB;
+    --green: #21BF73;
+    --red: #FD5E53;
+    --border-color: #19282F;
     --rows-num: 4;
     --cols-num: 4;
-    --cell-size: 40px;
+    --cell-size: 30px;
 }
 
 main {
@@ -27,7 +28,7 @@ section {
 }
 
 .cell {
-    border: 2px solid black;
+    border: 2px solid var(--border-color);
     background-color: var(--white);
     height: var(--cell-size);
     width: var(--cell-size);

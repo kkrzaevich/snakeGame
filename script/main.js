@@ -58,25 +58,50 @@ class Snake {
         const startingRow = Math.floor(this.snakeArray.length/2) -1;
         const startingColumn = Math.floor(this.snakeArray[0].length/2) - 1;
         this.snakeArray[startingRow][startingColumn] = 0;
-        console.log("snake array", this.snakeArray)
+        // console.log("snake array", this.snakeArray)
     }
-    drawSnake(gameFieldDOM) {
+    drawSnake() {
         this.snakeArray.forEach((row, index1) => row.forEach((item, index2) => {
-            if (item>=0) {document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} red`
-        } else {document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} white`}
+            if (item>=0) {document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} green`
+        } else if (item===-1) {document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} white`
+        } else if (item===-1000) {document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} red`}
         }
         ))
     }
-    generateFood() {
+    // drawFood() {
+    //     this.snakeArray.forEach((row, index1) => row.forEach((item, index2) => {
+    //         if (item===-1000) {
+    //             document.querySelector(`.row${index1}-col${index2}`).classList = `cell row${index1}-col${index2} red`}
+    //     }
+    //     ))
+    // }
+    generateFoodCell() {
+        const emptyCells = [];
+        this.snakeArray.forEach((row, i) => {
+            row.forEach((col, j) => {
+                if (col === -1) {
+                    emptyCells.push({rows: i, cols: j})
+                }
+            })
+        })
+        const foodCellIndex = Math.floor(Math.random()*emptyCells.length);
+        const foodCell = emptyCells[foodCellIndex];
+        this.snakeArray[foodCell.rows][foodCell.cols] = -1000;
+        console.log("snake array",this.snakeArray);
+        // this.drawFood();
 
+        // создаем массив emptyCells из всех ячеек с значением -1
+        // в каждую ячейку записываем объект с индексом матрицы i, j
+        // случайно выбираем из них элемент (создаем случайное число от 0 до длины массива emptyCells, округляем)
+        // берем snakeArray по значениям i,j из выбранной случайно ячейки, присваиваем ее значение  -1000
     }
     getMaxElement() {
         let maxEl = {value: -1, indexRows: undefined, indexCols: undefined}
         this.snakeArray.forEach(
             (row, index) => {
-                console.log(row);
+                // console.log(row);
                 let localMax = Math.max(...row);
-                console.log(localMax);
+                // console.log(localMax);
                 if (localMax > maxEl.value) {
                     maxEl.value = localMax;
                     maxEl.indexRows = index;
@@ -123,18 +148,19 @@ class Snake {
     gameOver() {
 
     }
-    move(maxEl, nextCell, gameFieldDOM) {
+    move(maxEl, nextCell) {
         let nextCellContent = this.snakeArray[nextCell.rows][nextCell.cols]
         if (nextCellContent === -1) { // если ничего нет по ходу движения
             this.snakeArray[nextCell.rows][nextCell.cols] = maxEl.value + 1;
             this.deleteCells(); 
         } else if (nextCellContent === -1000) { // если по ходу движения еда
             this.snakeArray[nextCell.rows][nextCell.cols] = maxEl.value + 1;
+            this.generateFoodCell();
         } else if (nextCellContent >= 0) { // если по ходу движения змея
             this.gameOver();
         } 
-        console.log("snake array: ", this.snakeArray);
-        this.drawSnake(gameFieldDOM);
+        // console.log("snake array: ", this.snakeArray);
+        this.drawSnake();
     }
 }
 
@@ -147,19 +173,19 @@ class Controls {
             if (event.key === "ArrowRight") {
                 this.key = "right";
                 snake.direction = this.key;
-                console.log(snake.direction);
+                // console.log(snake.direction);
             } else if (event.key === "ArrowLeft") {
                 this.key = "left";
                 snake.direction = this.key;
-                console.log(snake.direction);
+                // console.log(snake.direction);
             } else if (event.key === "ArrowUp") {
                 this.key = "top";
                 snake.direction = this.key;
-                console.log(snake.direction);
+                // console.log(snake.direction);
             } else if (event.key === "ArrowDown") {
                 this.key = "bottom";
                 snake.direction = this.key;
-                console.log(snake.direction);
+                // console.log(snake.direction);
             }
         });
     }
@@ -208,11 +234,11 @@ function initializeEverything(gameField, snake, rows, cols) {
 }
 
 function pulse(gameField, snake) {
-    snake.move(snake.getMaxElement(), snake.getNextCell(), gameField.targetDOMel);
+    snake.move(snake.getMaxElement(), snake.getNextCell());
 }
 
-const rowsSetting = new Setting(4, document.querySelector("#rows-decrement"), document.querySelector("#rows-increment"), document.querySelector("#rows-show-num"));
-const colsSetting = new Setting(4, document.querySelector("#cols-decrement"), document.querySelector("#cols-increment"), document.querySelector("#cols-show-num"));
+const rowsSetting = new Setting(10, document.querySelector("#rows-decrement"), document.querySelector("#rows-increment"), document.querySelector("#rows-show-num"));
+const colsSetting = new Setting(10, document.querySelector("#cols-decrement"), document.querySelector("#cols-increment"), document.querySelector("#cols-show-num"));
 const gameField = new GameField(rowsSetting.number, colsSetting.number, document.querySelector("#game-field"));
 const controls = new Controls("right");
 const snake = new Snake([], controls.key);
@@ -223,8 +249,10 @@ snake.setBaseArray(gameField.setupArray());
 snake.setInitialSnakeNumbers();
 snake.drawSnake(gameField.targetDOMel);
 controls.getKey(snake);
+snake.generateFoodCell();
 pulse(gameField, snake);
 setInterval(() => {pulse(gameField, snake)}, 500);
 
-// добавить еду
 // отмасштабировать для разного количества ячеек
+// добавить gameOver
+// добавить интерфейс
