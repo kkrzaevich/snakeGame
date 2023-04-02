@@ -11,30 +11,38 @@
 
 <body>
     <main>
-        <section class="left-side">
-            <div class="game-field" id="game-field">
-                <!-- Elements are added via javascript -->
+        <section id="main-menu">
+            <button class="menu-button" id="start-game">Start game</button>
+            <button class="menu-button" id="start-game">Settings</button>
+            <div id="settings">
+                <div class="settings-outer">
+                    <p class="settings-inner">Number of rows:</p>
+                    <button class="settings-inner small" id="rows-decrement">-</button>
+                    <p class="settings-inner small" id="rows-show-num">33</p>
+                    <button class="settings-inner small" id="rows-increment">+</button>
+
+                    <p class="settings-inner">Number of cols:</p>
+                    <button class="settings-inner small" id="cols-decrement">-</button>
+                    <p class="settings-inner small" id="cols-show-num">33</p>
+                    <button class="settings-inner small" id="cols-increment">+</button>
+
+                    <p class="settings-inner">Speed:</p>
+                    <button class="settings-inner small" id="speed-decrement">-</button>
+                    <p class="settings-inner small" id="speed-show-num">33</p>
+                    <button class="settings-inner small" id="speed-increment">+</button>
+                </div>
             </div>
         </section>
-        <section class="right-side">
-            <div class="settings-outer">
-                <p class="settings-inner">Number of rows:</p>
-                <button class="settings-inner small" id="rows-decrement">-</button>
-                <p class="settings-inner small" id="rows-show-num">33</p>
-                <button class="settings-inner small" id="rows-increment">+</button>
+        <section id="game-viewport">
+            <section class="side left-side">
+                <div class="game-field" id="game-field">
+                    <!-- Elements are added via javascript -->
+                </div>
+            </section>
+            <section class="side right-side">
 
-                <p class="settings-inner">Number of cols:</p>
-                <button class="settings-inner small" id="cols-decrement">-</button>
-                <p class="settings-inner small" id="cols-show-num">33</p>
-                <button class="settings-inner small" id="cols-increment">+</button>
-
-                <p class="settings-inner">Speed:</p>
-                <button class="settings-inner small" id="speed-decrement">-</button>
-                <p class="settings-inner small" id="speed-show-num">33</p>
-                <button class="settings-inner small" id="speed-increment">+</button>
-            </div>
+            </section>
         </section>
-
     </main>
 </body>
 <script src="script/main.js"></script>

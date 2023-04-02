@@ -8,11 +8,15 @@
     --cell-size: 30px;
 }
 
-main {
+body {
+    background-color: var(--white);
+}
+
+#game-viewport {
     display: flex;
 }
 
-section {
+.side {
     width: 50%;
 }
 
