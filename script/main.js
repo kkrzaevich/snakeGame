@@ -178,23 +178,29 @@ class Controls {
 }
 
 class Setting {
-    constructor(number, buttonLess, buttonMore, displayText) {
+    constructor(number, buttonLess, buttonMore, displayText, min, max) {
       this.number = number;
       this.buttonLess = buttonLess;
       this.buttonMore = buttonMore;
       this.displayText = displayText;
+      this.min = min;
+      this.max = max;
     }
     initialize(connectGameFieldToSettings) {
         this.displayText.textContent = this.number;   
         connectGameFieldToSettings();     
     }
     increment() {
-        this.number++;
-        this.displayText.textContent = this.number;
+        if (this.number < this.max) {
+            this.number++;
+            this.displayText.textContent = this.number;
+        }
     }
     decrement() {
-        this.number--;
-        this.displayText.textContent = this.number;
+        if (this.number > this.min) {
+            this.number--;
+            this.displayText.textContent = this.number;
+        }
     }
     listenButtonLess(connectGameFieldToSettings) {
         this.buttonLess.addEventListener("click", () => {
@@ -235,7 +241,7 @@ function startSettings(rowsSetting, colsSetting, speedSetting, gameField) {
     let gameSpeed = 200;
     rowsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
     colsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
-    speedSetting.makeWork(() => {gameSpeed = 10000/speedSetting.number});
+    speedSetting.makeWork(() => {gameSpeed = 2000/speedSetting.number});
 }
 
 function showScore(scoreElement, snake) {
@@ -264,7 +270,7 @@ function startGame(rowsSetting, colsSetting, speedSetting, gameField, controls, 
     let gameSpeed = 200;
     rowsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
     colsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
-    speedSetting.makeWork(() => {gameSpeed = 10000/speedSetting.number});
+    speedSetting.makeWork(() => {gameSpeed = 2000/speedSetting.number});
     showSettings(showSettingsElement, rowsSetting.number, colsSetting.number, speedSetting.number);
     snake.setBaseArray(gameField.setupArray());
     snake.setInitialSnakeNumbers();
@@ -274,9 +280,12 @@ function startGame(rowsSetting, colsSetting, speedSetting, gameField, controls, 
     unpause(snake, gameSpeed);
 }
 
-const rowsSetting = new Setting(10, document.querySelector("#rows-decrement"), document.querySelector("#rows-increment"), document.querySelector("#rows-show-num"));
-const colsSetting = new Setting(10, document.querySelector("#cols-decrement"), document.querySelector("#cols-increment"), document.querySelector("#cols-show-num"));
-const speedSetting = new Setting(50, document.querySelector("#speed-decrement"), document.querySelector("#speed-increment"), document.querySelector("#speed-show-num"));
+const isMobile = (screen.width < 500) ? true : false;
+const maxRows = (isMobile) ? 10 : 15;
+const maxCols = (isMobile) ? 10 : 15;
+const rowsSetting = new Setting(10, document.querySelector("#rows-decrement"), document.querySelector("#rows-increment"), document.querySelector("#rows-show-num"), 3, maxRows);
+const colsSetting = new Setting(10, document.querySelector("#cols-decrement"), document.querySelector("#cols-increment"), document.querySelector("#cols-show-num"), 3, maxCols);
+const speedSetting = new Setting(10, document.querySelector("#speed-decrement"), document.querySelector("#speed-increment"), document.querySelector("#speed-show-num"), 1, 50);
 const gameField = new GameField(rowsSetting.number, colsSetting.number, document.querySelector("#game-field"));
 const controls = new Controls("right");
 const snake = new Snake([], controls.key);
@@ -300,7 +309,7 @@ startGameButton.addEventListener("click", () => {
     }, animationSpeed)
 })
 pauseButton.addEventListener("click", () => {
-    if (isPaused) {unpause(snake,10000/speedSetting.number)}
+    if (isPaused) {unpause(snake,2000/speedSetting.number)}
     else {pause()}
 })
 
