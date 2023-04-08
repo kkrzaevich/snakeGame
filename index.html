@@ -12,36 +12,44 @@
 <body>
     <main>
         <section id="main-menu">
-            <button class="menu-button" id="start-game">Start game</button>
-            <button class="menu-button" id="start-game">Settings</button>
-            <div id="settings">
-                <div class="settings-outer">
-                    <p class="settings-inner">Number of rows:</p>
-                    <button class="settings-inner small" id="rows-decrement">-</button>
-                    <p class="settings-inner small" id="rows-show-num">33</p>
-                    <button class="settings-inner small" id="rows-increment">+</button>
+            <div id="menu-items">
+                <button class="menu-button" id="start-game">start game</button>
+                <!-- Когда жмем сюда, главное меню полностью пропадает, а игровое поле переводится в видимое состояние. Запускается игровой луп. Также прописать функцию game over!  -->
+                <button class="menu-button" id="settings-button">settings</button>
+                <!-- Когда жмем сюда, меню настроек переводится из visibility: hidden в видимое состояние. Когда жмем еще раз, снова скрывается. -->
+                <div id="settings" style="visibility: hidden; opacity: 0;">
+                    <div class="settings-outer">
+                        <p class="settings-inner">number of rows:</p>
+                        <button class="settings-inner small" id="rows-decrement">-</button>
+                        <p class="settings-inner small" id="rows-show-num">33</p>
+                        <button class="settings-inner small" id="rows-increment">+</button>
 
-                    <p class="settings-inner">Number of cols:</p>
-                    <button class="settings-inner small" id="cols-decrement">-</button>
-                    <p class="settings-inner small" id="cols-show-num">33</p>
-                    <button class="settings-inner small" id="cols-increment">+</button>
+                        <p class="settings-inner">number of cols:</p>
+                        <button class="settings-inner small" id="cols-decrement">-</button>
+                        <p class="settings-inner small" id="cols-show-num">33</p>
+                        <button class="settings-inner small" id="cols-increment">+</button>
 
-                    <p class="settings-inner">Speed:</p>
-                    <button class="settings-inner small" id="speed-decrement">-</button>
-                    <p class="settings-inner small" id="speed-show-num">33</p>
-                    <button class="settings-inner small" id="speed-increment">+</button>
+                        <p class="settings-inner">speed:</p>
+                        <button class="settings-inner small" id="speed-decrement">-</button>
+                        <p class="settings-inner small" id="speed-show-num">33</p>
+                        <button class="settings-inner small" id="speed-increment">+</button>
+                    </div>
                 </div>
             </div>
         </section>
-        <section id="game-viewport">
-            <section class="side left-side">
+        <section id="game-viewport" style="opacity: 0;">
+            <div>
                 <div class="game-field" id="game-field">
                     <!-- Elements are added via javascript -->
                 </div>
-            </section>
-            <section class="side right-side">
-
-            </section>
+                <div id="game-field-aux">
+                    <p id="show-score">score is 15.</p>
+                    <p>use arrow keys to control the snake.</p>
+                    <p id="show-size-speed">game-field size is 10x10, speed is 50.</p>
+                    <button class="game-field-button" id="pause-button">pause.</button>
+                    <button class="game-field-button">main menu.</button>
+                    <button class="game-field-button">turn the sound on.</button>
+                </div>
         </section>
     </main>
 </body>

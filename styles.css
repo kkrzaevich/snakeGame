@@ -3,17 +3,52 @@
     --green: #21BF73;
     --red: #FD5E53;
     --border-color: #19282F;
+    --grey: rgb(227, 227, 227);
     --rows-num: 4;
     --cols-num: 4;
     --cell-size: 30px;
+    --timeout: 0.3s;
+    --movement-animation: 0.1s;
 }
 
 body {
     background-color: var(--white);
+    font-family: monospace;
+}
+
+button {
+    background-color: var(--grey);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 1rem;
 }
 
 #game-viewport {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 90vh;
+    transition: opacity var(--timeout);
+}
+
+#main-menu {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 90vh;
+    transition: opacity var(--timeout);
+}
+
+#menu-items {
+
+}
+
+.menu-button {
+    margin: 2rem;
+    padding: 0.5rem;
 }
 
 .side {
@@ -24,6 +59,7 @@ body {
     display: grid;
     grid-template-rows: repeat(var(--rows-num), var(--cell-size));
     grid-template-columns: var(--cols-num)*var(--cell-size);
+    margin: auto;
 }
 
 .game-field-row {
@@ -36,6 +72,25 @@ body {
     background-color: var(--white);
     height: var(--cell-size);
     width: var(--cell-size);
+    transition: background-color var(--movement-animation);
+}
+
+#game-field-aux {
+    margin-top: 2rem;
+    text-align:left;
+    font-size: 0.8rem;
+}
+
+#game-field-aux button {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    font-size: 0.8rem;
+    padding-left: 0;
+    text-decoration: underline;
 }
 
 .white {
@@ -51,6 +106,19 @@ body {
 }
 
 /* Settings */
+
+#settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 20vh;
+    font-size: 1rem;
+    background-color: var(--grey);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    transition: opacity var(--timeout);
+}
 
 :root {
     --button-size: 30px;

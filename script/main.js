@@ -215,9 +215,49 @@ class Setting {
     }
 }
 
+// UI declarations
+const animationSpeed = 300;
+document.querySelector(':root').style.setProperty('--timeout', `${animationSpeed/1000}s`);
+const startGameButton = document.querySelector("#start-game");
+const settingsButton = document.querySelector("#settings-button");
+const gameViewport = document.querySelector("#game-viewport");
+const mainMenu = document.querySelector("#main-menu");
+const settingsMenu = document.querySelector("#settings");
+const showSettingsElement = document.querySelector("#show-size-speed");
+const showScoreElement = document.querySelector("#show-score");
+const pauseButton = document.querySelector('#pause-button');
 
 function gameLoop(snake) {
     snake.move(snake.getMaxElement(), snake.getNextCell());
+}
+
+function startSettings(rowsSetting, colsSetting, speedSetting, gameField) {
+    let gameSpeed = 200;
+    rowsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
+    colsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
+    speedSetting.makeWork(() => {gameSpeed = 10000/speedSetting.number});
+}
+
+function showScore(scoreElement, snake) {
+    const currentScore = snake.getMaxElement().value;
+    scoreElement.innerText = `score is ${currentScore}.`
+}
+
+function showSettings(showSettingsElement, rows, cols, gameSpeed) {
+    showSettingsElement.innerText = `game-field size is ${rows}x${cols}, speed is ${gameSpeed}.`
+}
+
+let gameLoopInterval;
+let isPaused;
+
+function unpause(snake, gameSpeed) {
+    gameLoopInterval = setInterval(() => {gameLoop(snake); showScore(showScoreElement, snake)}, gameSpeed);
+    isPaused = false;
+}
+
+function pause() {
+    clearInterval(gameLoopInterval);
+    isPaused = true;
 }
 
 function startGame(rowsSetting, colsSetting, speedSetting, gameField, controls, snake) {
@@ -225,12 +265,13 @@ function startGame(rowsSetting, colsSetting, speedSetting, gameField, controls, 
     rowsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
     colsSetting.makeWork(() => {gameField.buildInDOM(rowsSetting.number, colsSetting.number)});
     speedSetting.makeWork(() => {gameSpeed = 10000/speedSetting.number});
+    showSettings(showSettingsElement, rowsSetting.number, colsSetting.number, speedSetting.number);
     snake.setBaseArray(gameField.setupArray());
     snake.setInitialSnakeNumbers();
     snake.generateFoodCell();
     snake.drawSnake(gameField.targetDOMel);
     controls.getKey(snake);
-    setInterval(() => {gameLoop(snake)}, gameSpeed);
+    unpause(snake, gameSpeed);
 }
 
 const rowsSetting = new Setting(10, document.querySelector("#rows-decrement"), document.querySelector("#rows-increment"), document.querySelector("#rows-show-num"));
@@ -240,7 +281,31 @@ const gameField = new GameField(rowsSetting.number, colsSetting.number, document
 const controls = new Controls("right");
 const snake = new Snake([], controls.key);
 
-startGame(rowsSetting, colsSetting, speedSetting, gameField, controls, snake);
+startSettings(rowsSetting, colsSetting, speedSetting, gameField);
+
+// UI buttons functionality
+settingsButton.addEventListener("click", () => {
+    let settingsMenuVisibility = settingsMenu.style.visibility;
+    if (settingsMenuVisibility === "hidden") {settingsMenu.style.visibility = "visible"; settingsMenu.style.opacity = "1";}
+    else {setTimeout(() => {settingsMenu.style.visibility = "hidden";}, animationSpeed);  settingsMenu.style.opacity = "0";};
+})
+startGameButton.addEventListener("click", () => {
+    mainMenu.style.opacity='0';
+    startGame(rowsSetting, colsSetting, speedSetting, gameField, controls, snake);
+    setTimeout(() => {
+        mainMenu.style.setProperty("display", "none");
+        gameViewport.style.setProperty("display", "flex");
+        setTimeout(() => {gameViewport.style.opacity='1';}, 1)
+        
+    }, animationSpeed)
+})
+pauseButton.addEventListener("click", () => {
+    if (isPaused) {unpause(snake,10000/speedSetting.number)}
+    else {pause()}
+})
+
+
+
 
 // отмасштабировать для разного количества ячеек
 // добавить gameOver
