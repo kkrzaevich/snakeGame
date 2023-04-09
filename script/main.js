@@ -263,6 +263,7 @@ const mobileButtonRight = document.querySelector('#button-right');
 const mobileButtonLeft = document.querySelector('#button-left');
 const mobileButtonDown = document.querySelector('#button-down');
 const mobileButtonUp = document.querySelector('#button-up');
+const contolsDescription = document.querySelector('#controls-description');
 
 function gameLoop(snake) {
     snake.move(snake.getMaxElement(), snake.getNextCell());
@@ -326,6 +327,7 @@ if (isMobile) {
     controls.getKeyMobile(snake, mobileButtonLeft);
     controls.getKeyMobile(snake, mobileButtonUp);
     controls.getKeyMobile(snake, mobileButtonDown);
+    contolsDescription.innerText = "use arrow buttons below to control the snake."
 }
 
 startSettings(rowsSetting, colsSetting, speedSetting, gameField);

@@ -95,8 +95,8 @@ button {
 
 #mobile-buttons {
     display: none;
-    grid-template-rows: 20px 20px 20px;
-    grid-template-columns: 30px 30px 30px;
+    grid-template-rows: 40px 40px 40px;
+    grid-template-columns: 40px 40px 40px;
     margin: auto;
     width: fit-content;
     margin-top: 1.5rem;
@@ -109,6 +109,7 @@ button {
     cursor: pointer;
     overflow: hidden;
     outline: none;
+    font-size: 1.5rem;
 }
 
 .white {
