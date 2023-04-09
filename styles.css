@@ -93,6 +93,24 @@ button {
     text-decoration: underline;
 }
 
+#mobile-buttons {
+    display: none;
+    grid-template-rows: 20px 20px 20px;
+    grid-template-columns: 30px 30px 30px;
+    margin: auto;
+    width: fit-content;
+    margin-top: 1.5rem;
+}
+
+#mobile-buttons button {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+
 .white {
     background-color: var(--white);
 }
@@ -139,8 +157,7 @@ button {
     margin-bottom: var(--margin-between-line);
     height: var(--button-size);
     margin-top: 0px;
-    /* vertical-align: top;
-    align-items:start; */
+
 }
 
 .settings-inner.small {

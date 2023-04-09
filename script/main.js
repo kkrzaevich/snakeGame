@@ -175,6 +175,31 @@ class Controls {
             }
         });
     }
+    getKeyMobile(snake, button) {
+        button.addEventListener("click", () => {
+            if (button.id.includes("right")) {
+                if (snake.direction !== "left") {
+                    this.key = "right";
+                    snake.direction = this.key;
+                }
+            } else if (button.id.includes("left")) {
+                if (snake.direction !== "right") {
+                    this.key = "left";
+                    snake.direction = this.key;
+                }
+            } else if (button.id.includes("up")) {
+                if (snake.direction !== "bottom") {
+                    this.key = "top";
+                    snake.direction = this.key;
+                }
+            } else if (button.id.includes("down")) {
+                if (snake.direction !== "top") {
+                    this.key = "bottom";
+                    snake.direction = this.key;
+                }
+            }
+        });
+    }
 }
 
 class Setting {
@@ -232,6 +257,12 @@ const settingsMenu = document.querySelector("#settings");
 const showSettingsElement = document.querySelector("#show-size-speed");
 const showScoreElement = document.querySelector("#show-score");
 const pauseButton = document.querySelector('#pause-button');
+const mainMenuButton = document.querySelector('#main-menu-button');
+const mobileButtons = document.querySelector('#mobile-buttons');
+const mobileButtonRight = document.querySelector('#button-right');
+const mobileButtonLeft = document.querySelector('#button-left');
+const mobileButtonDown = document.querySelector('#button-down');
+const mobileButtonUp = document.querySelector('#button-up');
 
 function gameLoop(snake) {
     snake.move(snake.getMaxElement(), snake.getNextCell());
@@ -289,10 +320,26 @@ const speedSetting = new Setting(10, document.querySelector("#speed-decrement"),
 const gameField = new GameField(rowsSetting.number, colsSetting.number, document.querySelector("#game-field"));
 const controls = new Controls("right");
 const snake = new Snake([], controls.key);
+if (isMobile) {
+    mobileButtons.style.setProperty("display", "grid");
+    controls.getKeyMobile(snake, mobileButtonRight);
+    controls.getKeyMobile(snake, mobileButtonLeft);
+    controls.getKeyMobile(snake, mobileButtonUp);
+    controls.getKeyMobile(snake, mobileButtonDown);
+}
 
 startSettings(rowsSetting, colsSetting, speedSetting, gameField);
 
 // UI buttons functionality
+function goToMainMenu() {
+    pause();
+    gameViewport.style.opacity='0';
+    setTimeout(() => {
+        gameViewport.style.setProperty("display", "none");
+        mainMenu.style.setProperty("display", "flex");
+        setTimeout(() => {mainMenu.style.opacity='1';}, 1)
+    }, animationSpeed)
+}
 settingsButton.addEventListener("click", () => {
     let settingsMenuVisibility = settingsMenu.style.visibility;
     if (settingsMenuVisibility === "hidden") {settingsMenu.style.visibility = "visible"; settingsMenu.style.opacity = "1";}
@@ -305,9 +352,9 @@ startGameButton.addEventListener("click", () => {
         mainMenu.style.setProperty("display", "none");
         gameViewport.style.setProperty("display", "flex");
         setTimeout(() => {gameViewport.style.opacity='1';}, 1)
-        
     }, animationSpeed)
 })
+mainMenuButton.addEventListener("click", () => {goToMainMenu()});
 pauseButton.addEventListener("click", () => {
     if (isPaused) {unpause(snake,2000/speedSetting.number)}
     else {pause()}
