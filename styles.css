@@ -9,6 +9,9 @@
     --cell-size: 30px;
     --timeout: 0.3s;
     --movement-animation: 0.1s;
+    --blur-color: var(--green);
+    --blur-radius: 20px;
+    --snake-shine: 5px 5px var(--blur-radius) var(--blur-color), -5px -5px var(--blur-radius) var(--blur-color);
 }
 
 body {
@@ -40,10 +43,6 @@ button {
     text-align: center;
     min-height: 90vh;
     transition: opacity var(--timeout);
-}
-
-#menu-items {
-
 }
 
 .menu-button {
@@ -79,6 +78,7 @@ button {
     margin-top: 2rem;
     text-align:left;
     font-size: 0.8rem;
+    transition: opacity var(--timeout);
 }
 
 #game-field-aux button {
@@ -100,6 +100,7 @@ button {
     margin: auto;
     width: fit-content;
     margin-top: 1.5rem;
+    transition: opacity var(--timeout);
 }
 
 #mobile-buttons button {
@@ -112,16 +113,64 @@ button {
     font-size: 1.5rem;
 }
 
+#game-viewport-container {
+    position: relative;
+}
+
+.overlay-text {
+    display: none;
+    background-color: var(--white);
+    padding: 10px 10px 10px 10px;
+    border: 2px solid var(--border-color);
+    font-family: monospace;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 15%;
+    left: 52.5%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity var(--timeout);
+}
+
+.overlay-text h1 {
+    margin: 0px;
+}
+
+#game-over {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 90vh;
+    transition: opacity var(--timeout);
+}
+
+#game-over button {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    padding-left: 0;
+    text-decoration: underline;
+    display: block;
+    margin: 13px auto 13px auto;
+}
+
 .white {
     background-color: var(--white);
 }
 
 .green {
     background-color: var(--green);
+    transition: box-shadow var(--timeout);
+    box-shadow: var(--snake-shine);
 }
 
 .red {
     background-color: var(--red);
+    box-shadow: 0px 0px 10px var(--red);
 }
 
 /* Settings */

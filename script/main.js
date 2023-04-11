@@ -128,8 +128,8 @@ class Snake {
         // снижаем номера в ячейках на 1
         this.snakeArray = [...this.snakeArray.map((row) => (row.map((col) => {return (col>-1) ? col - 1 : col})))];
     }
-    gameOver() {
-
+    callGameOver() {
+        gameOver();
     }
     move(maxEl, nextCell) {
         let nextCellContent = this.snakeArray[nextCell.rows][nextCell.cols]
@@ -140,7 +140,7 @@ class Snake {
             this.snakeArray[nextCell.rows][nextCell.cols] = maxEl.value + 1;
             this.generateFoodCell();
         } else if (nextCellContent >= 0) { // если по ходу движения змея
-            this.gameOver();
+            this.callGameOver();
         } 
         this.drawSnake();
     }
@@ -258,12 +258,18 @@ const showSettingsElement = document.querySelector("#show-size-speed");
 const showScoreElement = document.querySelector("#show-score");
 const pauseButton = document.querySelector('#pause-button');
 const mainMenuButton = document.querySelector('#main-menu-button');
+const gameFieldAux = document.querySelector('#game-field-aux')
 const mobileButtons = document.querySelector('#mobile-buttons');
 const mobileButtonRight = document.querySelector('#button-right');
 const mobileButtonLeft = document.querySelector('#button-left');
 const mobileButtonDown = document.querySelector('#button-down');
 const mobileButtonUp = document.querySelector('#button-up');
 const contolsDescription = document.querySelector('#controls-description');
+const overlayText = document.querySelector(".overlay-text");
+const gameOverScreen = document.querySelector("#game-over");
+const gameOverScore = document.querySelector("#game-over-score");
+const gameOverRestart = document.querySelector("#game-over-restart");
+const gameOverMainMenu = document.querySelector("#game-over-main-menu");
 
 function gameLoop(snake) {
     snake.move(snake.getMaxElement(), snake.getNextCell());
@@ -283,19 +289,6 @@ function showScore(scoreElement, snake) {
 
 function showSettings(showSettingsElement, rows, cols, gameSpeed) {
     showSettingsElement.innerText = `game-field size is ${rows}x${cols}, speed is ${gameSpeed}.`
-}
-
-let gameLoopInterval;
-let isPaused;
-
-function unpause(snake, gameSpeed) {
-    gameLoopInterval = setInterval(() => {gameLoop(snake); showScore(showScoreElement, snake)}, gameSpeed);
-    isPaused = false;
-}
-
-function pause() {
-    clearInterval(gameLoopInterval);
-    isPaused = true;
 }
 
 function startGame(rowsSetting, colsSetting, speedSetting, gameField, controls, snake) {
@@ -333,13 +326,74 @@ if (isMobile) {
 startSettings(rowsSetting, colsSetting, speedSetting, gameField);
 
 // UI buttons functionality
+let gameLoopInterval;
+let isPaused;
+
+function unpause(snake, gameSpeed) {
+    gameLoopInterval = setInterval(() => {gameLoop(snake); showScore(showScoreElement, snake)}, gameSpeed);
+    isPaused = false;
+    overlayText.style.setProperty("opacity", "0")
+    setTimeout(() => {overlayText.style.setProperty("display", "none");}, animationSpeed/2);
+}
+
+function pause() {
+    clearInterval(gameLoopInterval);
+    isPaused = true;
+    overlayText.style.setProperty("display", "flex");
+    overlayText.style.setProperty("opacity", "1");
+}
+
+function gameOver() {
+    const root = document.querySelector(':root');
+    root.style.setProperty('--blur-color', "var(--red)");
+    root.style.setProperty('--blur-radius', "3px");
+    clearInterval(gameLoopInterval);
+    isPaused = true;
+    gameOverScore.innerText = `your score was ${snake.getMaxElement().value}.`
+    mobileButtons.style.setProperty("opacity", "0");
+    gameFieldAux.style.setProperty("opacity", "0");
+    setTimeout(() => {
+        gameViewport.style.setProperty("opacity", "0");
+        setTimeout(() => {
+            gameViewport.style.setProperty("display", "none");
+            gameOverScreen.style.setProperty("display", "flex");
+            setTimeout(() => {gameOverScreen.style.setProperty("opacity", "1");}, 1)
+        }, animationSpeed)
+    }, 1000)
+    setTimeout(() => {
+        mobileButtons.style.setProperty("opacity", "1");
+        gameFieldAux.style.setProperty("opacity", "1");
+        root.style.setProperty('--blur-color', "var(--green)");
+    root.style.setProperty('--blur-radius', "20px");
+    }, 2000)
+}
+
 function goToMainMenu() {
-    pause();
+    clearInterval(gameLoopInterval);
+    isPaused = true;
     gameViewport.style.opacity='0';
     setTimeout(() => {
         gameViewport.style.setProperty("display", "none");
         mainMenu.style.setProperty("display", "flex");
         setTimeout(() => {mainMenu.style.opacity='1';}, 1)
+    }, animationSpeed)
+}
+function gameOverToMainMenu() {
+    gameOverScreen.style.opacity='0';
+    setTimeout(() => {
+        gameOverScreen.style.setProperty("display", "none");
+        mainMenu.style.setProperty("display", "flex");
+        setTimeout(() => {mainMenu.style.opacity='1';}, 1)
+    }, animationSpeed)
+}
+function gameOverToRestart() {
+    gameOverScreen.style.opacity='0';
+    isPaused = false;
+    startGame(rowsSetting, colsSetting, speedSetting, gameField, controls, snake);
+    setTimeout(() => {
+        gameOverScreen.style.setProperty("display", "none");
+        gameViewport.style.setProperty("display", "flex");
+        setTimeout(() => {gameViewport.style.opacity='1';}, 1)
     }, animationSpeed)
 }
 settingsButton.addEventListener("click", () => {
@@ -349,6 +403,7 @@ settingsButton.addEventListener("click", () => {
 })
 startGameButton.addEventListener("click", () => {
     mainMenu.style.opacity='0';
+    isPaused = false;
     startGame(rowsSetting, colsSetting, speedSetting, gameField, controls, snake);
     setTimeout(() => {
         mainMenu.style.setProperty("display", "none");
@@ -362,9 +417,10 @@ pauseButton.addEventListener("click", () => {
     else {pause()}
 })
 
+gameOverMainMenu.addEventListener("click", () => {
+    gameOverToMainMenu();
+})
 
-
-
-// отмасштабировать для разного количества ячеек
-// добавить gameOver
-// добавить интерфейс
+gameOverRestart.addEventListener("click", () => {
+    gameOverToRestart();
+})

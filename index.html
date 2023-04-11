@@ -40,7 +40,10 @@
             </div>
         </section>
         <section id="game-viewport" style="opacity: 0;">
-            <div>
+            <div id="game-viewport-container">
+                <div class="overlay-text">
+                    <h1>paused.</h1>
+                </div>
                 <div class="game-field" id="game-field">
                     <!-- Elements are added via javascript -->
                 </div>
@@ -48,7 +51,6 @@
                     <p id="show-score">score is 15.</p>
                     <button class="game-field-button" id="pause-button">pause.</button>
                     <button class="game-field-button" id="main-menu-button">main menu.</button>
-                    <button class="game-field-button">turn the sound on.</button>
                     <p id="controls-description">use arrow keys to control the snake.</p>
                     <p id="show-size-speed">game-field size is 10x10, speed is 50.</p>
 
@@ -72,6 +74,18 @@
                     </div>
                     <div></div>
                 </div>
+        </section>
+        <section id="game-over" style="display: none">
+            <div id="game-over-container">
+                <h1>game over.</h1>
+                <button id="game-over-restart">
+                    restart.
+                </button>
+                <button id="game-over-main-menu">
+                    or go to main menu.
+                </button>
+                <p id="game-over-score">your score was ...</p>
+            </div>
         </section>
     </main>
 </body>
